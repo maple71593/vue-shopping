@@ -10,36 +10,37 @@
 
       <div class="form">
         <div class="form-item">
-          <input v-model="phone" class="inp" maxlength="11" placeholder="請輸入手機號碼" type="text">
+          <input v-model="phone" class="inp" maxlength="10" placeholder="請輸入手機號碼" type="text">
         </div>
         <div class="form-item">
-          <input v-model="PicCode" class="inp" maxlength="5" placeholder="請輸入圖形驗證碼" type="text">
+          <input v-model="PicCode" class="inp" maxlength="4" placeholder="請輸入圖形驗證碼" type="text">
           <img :src="PicUrl" @click="PicServer" alt="">
         </div>
         <div class="form-item">
-          <input class="inp" placeholder="請輸入短信驗證碼" type="text">
+          <input class="inp" v-model="smsCode" placeholder="請輸入短信驗證碼" type="text">
           <button @click="GetPhoneCode">{{setFirstTime === FirstTime? '獲取驗證碼':'倒數'+ setFirstTime +'秒' }}</button>
         </div>
       </div>
 
-      <div class="login-btn">登錄</div>
+      <div @click="Login" class="login-btn">登錄</div>
     </div>
   </div>
 </div>
 </template>
 
 <script>
-import { getPicServer, getphoneServe } from '@/api/login'
+import { getPicServer, getphoneServe, codeLogin } from '@/api/login'
 export default {
   data () {
     return {
-      PicCode: [],
-      Pickey: [],
-      PicUrl: [],
+      PicCode: '',
+      Pickey: '',
+      PicUrl: '',
       FirstTime: 10,
       setFirstTime: 10,
       timer: null,
-      phone: []
+      phone: '',
+      smsCode: ''
 
     }
   },
@@ -66,10 +67,10 @@ export default {
     },
     async GetPhoneCode () {
       if (!this.TestAns()) return
-      alert('驗證碼已發送')
       if (!this.timer && this.FirstTime === this.setFirstTime) {
         const res = await getphoneServe(this.PicCode, this.Pickey, this.phone)
         console.log(res)
+        alert('驗證碼已發送')
         this.timer = setInterval(() => {
           this.setFirstTime--
           if (this.setFirstTime <= 1) {
@@ -82,6 +83,15 @@ export default {
     },
     destroyed () {
       clearInterval((this.timer))
+    },
+    async Login () {
+      if (!this.TestAns()) { return }
+      if (!/^\d{6}$/.test(this.smsCode)) { return }
+      const res = await codeLogin(this.phone, this.smsCode)
+      this.$store.commit('User/setID', res.data)
+      alert('登入成功')
+      this.$router.push('/')
+      console.log(res)
     }
   }
 }
