@@ -10,3 +10,20 @@ export const GetSearchData = (obj) => {
     }
   })
 }
+
+export const GetdetailData = (goodsId) => {
+  return request.get('/goods/detail', {
+    params: {
+      goodsId
+    }
+  })
+}
+
+export const GetlistRowsData = (goodsId, limit) => {
+  return request.get('/comment/listRows', {
+    params: {
+      goodsId,
+      limit
+    }
+  })
+}

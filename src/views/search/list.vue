@@ -49,7 +49,7 @@ export default {
   },
   async created () {
     const { data: { list } } = await GetSearchData({
-      categoryId: this.$route.query.category,
+      categoryId: this.$route.query.categoryId,
       goodsName: this.querySearch,
       page: this.page
     })

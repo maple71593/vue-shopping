@@ -90,8 +90,8 @@ export default {
       const res = await codeLogin(this.phone, this.smsCode)
       this.$store.commit('User/setID', res.data)
       alert('登入成功')
-      this.$router.push('/')
-      console.log(res)
+      const URL = this.$route.query.nowUrl || '/'
+      this.$router.replace(URL)
     }
   }
 }
