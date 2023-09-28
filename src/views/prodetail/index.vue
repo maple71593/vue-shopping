@@ -142,7 +142,6 @@ export default {
     // 頁面API
     async getdetail () {
       const { data: { detail } } = await GetdetailData(this.goodId)
-      console.log(detail)
       this.detail = detail
       this.images = detail.goods_images
     },

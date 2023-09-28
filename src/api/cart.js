@@ -7,3 +7,15 @@ export const GetCartAddData = (goodsId, goodsNum, goodsSkuId) => {
     goodsId
   })
 }
+
+export const GetCartList = () => {
+  return request.get('/cart/list')
+}
+
+export const GetCartListDataUp = (goodsId, goodsNum, goodsSkuId) => {
+  return request.post('/cart/update', {
+    goodsSkuId,
+    goodsNum,
+    goodsId
+  })
+}

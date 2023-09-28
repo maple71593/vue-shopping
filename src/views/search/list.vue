@@ -54,7 +54,6 @@ export default {
       page: this.page
     })
     this.searchlist = list.data
-    console.log(list)
   }
 }
 </script>

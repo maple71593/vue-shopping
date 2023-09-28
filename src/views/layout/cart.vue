@@ -3,7 +3,7 @@
     <van-nav-bar title="購物車" fixed />
     <!-- 購物車開頭 -->
     <div class="cart-title">
-      <span class="all">共<i>4</i>件商品</span>
+      <span class="all">共<i>{{ totelAll}}</i>件商品</span>
       <span class="edit">
         <van-icon name="edit" />
         編輯
@@ -12,20 +12,16 @@
 
     <!-- 購物車列表 -->
     <div class="cart-list">
-      <div class="cart-item" v-for="item in 10" :key="item">
-        <van-checkbox></van-checkbox>
+      <div class="cart-item" v-for="item in cartList" :key="item.goods_id">
+        <van-checkbox @click="ChangeCheckedSM(item.goods_id)" :value="item.isChecked"></van-checkbox>
         <div class="show">
-          <img src="http://cba.itlike.com/public/uploads/10001/20230321/a072ef0eef1648a5c4eae81fad1b7583.jpg" alt="">
+          <img :src="item.goods.goods_image" alt="">
         </div>
         <div class="info">
-          <span class="tit text-ellipsis-2">新Pad 14英寸 12+128 遠峰藍 M6平板電腦 智慧安卓娛樂十核遊戲學習二合一 低藍光護眼超清4K全面三星屏5GWIFI全網通 藍魔快本平板</span>
+          <span class="tit text-ellipsis-2">{{ item.goods.goods_name}}</span>
           <span class="bottom">
-            <div class="price">¥ <span>1247.04</span></div>
-            <div class="count-box">
-              <button class="minus">-</button>
-              <input class="inp" :value="4" type="text" readonly>
-              <button class="add">+</button>
-            </div>
+            <div class="price">¥ <span>{{ item.goods.goods_price_min }}</span></div>
+            <CountBox :value="item.goods_num" ></CountBox>
           </span>
         </div>
       </div>
@@ -33,16 +29,16 @@
 
     <div class="footer-fixed">
       <div  class="all-check">
-        <van-checkbox  icon-size="18"></van-checkbox>
+        <van-checkbox @click="Allchecked" :value="Allcheck" icon-size="18"></van-checkbox>
         全選
       </div>
 
       <div class="all-total">
         <div class="price">
           <span>合計：</span>
-          <span>¥ <i class="totalPrice">99.99</i></span>
+          <span>¥ <i class="totalPrice">{{AllMon}}</i></span>
         </div>
-        <div v-if="true" class="goPay">結算(5)</div>
+        <div v-if="true" class="goPay">結算({{AllNum}})</div>
         <div v-else class="delete">刪除</div>
       </div>
     </div>
@@ -50,8 +46,32 @@
 </template>
 
 <script>
+import CountBox from '@/components/AddSetInput.vue'
+import { mapState, mapActions, mapGetters } from 'vuex'
 export default {
-  name: 'CartPage'
+  name: 'CartPage',
+  components: {
+    CountBox
+  },
+  computed: {
+    ...mapState('Cart', ['cartList']),
+    ...mapGetters('Cart', ['totelAll', 'AllNum', 'AllMon', 'Allcheck'])
+  },
+  methods: {
+    ...mapActions('Cart', ['GetCartListData']),
+    Allchecked () {
+      this.$store.commit('Cart/ChangeChecked', !this.Allcheck)
+    },
+    ChangeCheckedSM (id) {
+      this.$store.commit('Cart/ChangeCheckedSM', id)
+    }
+  },
+  created () {
+    if (this.$store.getters.token) {
+      this.GetCartListData()
+    }
+  }
+
 }
 </script>
 

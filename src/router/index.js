@@ -23,22 +23,23 @@ const router = new VueRouter({
       redirect: '/home',
       component: Layout,
       children: [
-        { path: '/home', component: Home },
-        { path: '/category', component: Category },
-        { path: '/cart', component: Cart },
-        { path: '/user', component: User }
+        { path: '/home', component: Home }, // 首頁
+        { path: '/category', component: Category }, // 分類
+        { path: '/cart', component: Cart }, // 購物車
+        { path: '/user', component: User } // 使用者
       ]
-    },
-    { path: '/login', component: Login },
+    }, // 一進入的頁面
+
+    { path: '/login', component: Login }, // 登入
     { path: '/myorder', component: Myorder },
-    { path: '/pay', component: Pay },
-    { path: '/prodetail/:id', component: Prodetail },
-    { path: '/search', component: Search },
-    { path: '/searchlist', component: SearchList }
+    { path: '/pay', component: Pay }, // 支付
+    { path: '/prodetail/:id', component: Prodetail }, // 商品詳情頁
+    { path: '/search', component: Search }, // 搜尋
+    { path: '/searchlist', component: SearchList } // 搜尋結果窗
   ]
 })
 
-// 登入攔截
+// 登入攔截 {如果如果沒有登入，使用者就能訪問購物車或支付頁面，當然不合理 所以需要登入攔截}
 // https://www.bilibili.com/video/BV1HV4y1a7n4/?p=119&spm_id_from=pageDriver&vd_source=13942c6c16741804cebefc67e42e4fe5
 const authUrls = ['/pay', '/myoreder']
 router.beforeEach((to, path, next) => {
