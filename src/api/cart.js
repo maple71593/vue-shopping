@@ -14,8 +14,14 @@ export const GetCartList = () => {
 
 export const GetCartListDataUp = (goodsId, goodsNum, goodsSkuId) => {
   return request.post('/cart/update', {
-    goodsSkuId,
+    goodsId,
     goodsNum,
-    goodsId
+    goodsSkuId
+  })
+}
+
+export const DelIDList = (cartIds) => {
+  return request.post('/cart/clear', {
+    cartIds
   })
 }

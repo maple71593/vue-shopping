@@ -18,7 +18,6 @@ export default {
     countset () {
       if (this.value <= 1) return
       this.$emit('input', this.value - 1)
-      console.log(this.value)
     },
     countadd () {
       this.$emit('input', this.value + 1)

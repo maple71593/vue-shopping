@@ -1,4 +1,4 @@
-import { GetCartList } from '@/api/cart'
+import { GetCartList, GetCartListDataUp, DelIDList } from '@/api/cart'
 
 export default {
   namespaced: true,
@@ -37,11 +37,14 @@ export default {
     ChangeChecked (state, NowisChecked) {
       state.cartList.forEach(item => { item.isChecked = NowisChecked })
     },
+    // 每個item項的反選功能
     ChangeCheckedSM (state, id) {
-      console.log(id)
       const good = state.cartList.find(item => item.goods_id === id)
-      console.log(good)
       good.isChecked = !good.isChecked
+    },
+    ChangeListData (state, { goodsNum, goodsId }) {
+      const changeGood = state.cartList.find(item => item.goods_id === goodsId)
+      changeGood.goods_num = goodsNum
     }
   },
   actions: {
@@ -52,11 +55,17 @@ export default {
       })
       context.commit('DataUpCarList', data.list)
       console.log(data.list)
+    },
+    async GetCartListDaUpctions (context, { goodsNum, goodsId, goodsSkuId }) {
+      context.commit('ChangeListData', { goodsNum, goodsId })
+      await GetCartListDataUp(goodsId, goodsNum, goodsSkuId)
+    },
+    async Del (context) {
+      const DelID = context.getters.setNum.map(item => item.id)
+      console.log(DelID)
+      await DelIDList(DelID)
+      context.dispatch('GetCartListData')
     }
-    // async GetCartListDaUpctions (context, obj) {
-    //   const res = await GetCartListDataUp(obj)
-    //   res.commit()
-    // }
   },
   modules: {
   }

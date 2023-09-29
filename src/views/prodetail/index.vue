@@ -64,11 +64,11 @@
 
     <!-- 底部 -->
     <div class="footer">
-      <div class="icon-home">
+      <div @click="$router.replace('/')" class="icon-home">
         <van-icon name="wap-home-o"/>
         <span>首頁</span>
       </div>
-      <div class="icon-cart">
+      <div @click="$router.replace('/cart')" class="icon-cart">
         <van-icon name="shopping-cart-o" :badge="cartTotal"/>
         <span>購物車</span>
       </div>
@@ -98,7 +98,7 @@
         </div>
         <div class="showbtn" v-if="detail.stock_total > 0">
           <div @click="addcart" class="btn" v-if="mode === 'cart'">加入購物車</div>
-          <div @click="addcart" class="btn now" v-else>立刻購買</div>
+          <div @click="GobuyNow" class="btn now" v-else>立刻購買</div>
         </div>
         <div class="btn-none" v-else>該商品已搶完</div>
       </div>
@@ -177,11 +177,25 @@ export default {
               }
             })
           })
+          .catch(() => {})
       }
       const { data: { cartTotal } } = await GetCartAddData(this.goodId, this.Count, this.detail.skuList[0].goods_sku_id)
       this.cartTotal = cartTotal
-      alert(`以添加購物車共計${cartTotal}項商品`)
+      alert(`購物車共有${cartTotal}項商品`)
       this.showPannel = false
+    },
+    GobuyNow () {
+      if (!this.$store.getters.token) return this.addcart()
+      this.$router.push({
+        path: '/pay',
+        query: {
+          mode: 'buyNow',
+          goodsId: this.goodId,
+          goodsSkuId: this.detail.skuList[0].goods_sku_id,
+          goodsNum: this.Count
+
+        }
+      })
     }
   },
   created () {
